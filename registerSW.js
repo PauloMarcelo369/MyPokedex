@@ -1,1 +1,1 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/myPokedex/sw.js', { scope: '/myPokedex/' })})}
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/MyPokedex/sw.js', { scope: '/MyPokedex/' })})}
