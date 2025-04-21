@@ -7,7 +7,7 @@ import CardPokemonSelected from "../components/CardPokemonSelected.vue";
 const pokemons = ref([]);
 
 const searchPokemonField = ref("");
-const loading = ref(true);
+const loading = ref(false);
 const name = ref("");
 const error = ref(null);
 const currentPokemon = ref({});
@@ -25,12 +25,15 @@ const fetchPokemons = async () => {
 };
 
 const pokemonEventClick = async (pokemon) => {
+  loading.value = true;
   try {
     const response = await api.get(`pokemon/${pokemon.name}`);
     currentPokemon.value = response.data;
     console.log(currentPokemon.value);
   } catch (err) {
     console.log("deu erro");
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -56,20 +59,20 @@ onMounted(() => {
       <div class="container">
         <div class="row mt-4">
           <div class="col-sm-12 col-md-6">
+            <div v-if="loading" class="">carregando</div>
             <CardPokemonSelected
+              v-else
               :name="currentPokemon?.name"
               :BASE_URL="
                 currentPokemon?.sprites?.other.dream_world.front_default
               "
               :xp="currentPokemon?.base_experience"
               :height="currentPokemon?.height"
+              v-show="!loading"
             />
           </div>
           <div class="col-sm-12 col-md-6">
-            <div v-show="loading" class="card-body row">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="card p-2">
+            <div class="card p-2 card-list">
               <div class="mb-3">
                 <label for="exampleFormControlInput" class="form-label"
                   >Pesquisar</label
@@ -100,3 +103,11 @@ onMounted(() => {
     </div>
   </main>
 </template>
+
+<style scoped>
+.card-list {
+  height: 75vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+</style>
